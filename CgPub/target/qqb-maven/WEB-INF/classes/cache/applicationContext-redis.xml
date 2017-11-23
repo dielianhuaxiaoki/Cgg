@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/cache 
+						http://www.springframework.org/schema/cache/spring-cache.xsd"
+						default-lazy-init="false" default-autowire="byName">
+			
+	<!-- 缓存的层级-->
+ 	<context:component-scan base-package="com.cgg.pub.common.cache.redis.impl" />
+ 				
+    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
+    
+    <!-- jedis 配置 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" p:max-idle="${redis.maxIdle}"
+		p:max-total="${redis.maxTotal}" p:max-wait-millis="${redis.maxWaitMillis}" p:test-on-borrow="${redis.testOnBorrow}">
+	<!-- 
+        <property name="maxIdle" value="${redis.maxIdle}" />  
+        <property name="maxTotal" value="${redis.maxActive.value}" />  
+        <property name="maxWaitMillis" value="${redis.maxWait}"></property>  
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+         -->
+    </bean>
+      
+    <!-- redis服务器中心 -->
+    <bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+        p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" p:use-pool="true"  p:pool-config-ref="poolConfig"/>
+      
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+    	p:connection-factory-ref="jedisFactory" />
+    
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+			p:connection-factory-ref="jedisFactory" />
+			
+    <!-- JedisCluster 集群高可用配置 -->
+	<!-- <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster">
+		<constructor-arg index="0">
+			<set>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.host}" />
+					<constructor-arg index="1" value="${redis.port}" type="int" />
+				</bean>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.ip2}" />
+					<constructor-arg index="1" value="${redis.port2}" type="int" />
+				</bean>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.ip3}" />
+					<constructor-arg index="1" value="${redis.port3}" type="int" />
+				</bean>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.ip4}" />
+					<constructor-arg index="1" value="${redis.port4}" type="int" />
+				</bean>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.ip5}" />
+					<constructor-arg index="1" value="${redis.port5}" type="int" />
+				</bean>
+				<bean class="redis.clients.jedis.HostAndPort">
+					<constructor-arg index="0" value="${redis.ip6}" />
+					<constructor-arg index="1" value="${redis.port6}" type="int" />
+				</bean>
+			</set>
+		</constructor-arg>
+		<constructor-arg index="1" value="2000" type="int"></constructor-arg>
+		<constructor-arg index="2" value="100" type="int"></constructor-arg>
+		<constructor-arg index="3" ref="poolConfig"></constructor-arg>
+	</bean> -->
+	
+	<!-- 启用缓存支持 -->  
+    <!-- turn on declarative caching -->  
+    <cache:annotation-driven />  
+    <!-- 配置缓存 -->
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg ref="redisTemplate" />
+    </bean>
+</beans>

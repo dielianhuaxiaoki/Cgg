@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 全局的参数配置，如开启二级缓存等 -->
+
+	<!-- 配置延迟加载,按需加载对象属性 -->
+ 	<settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="true"/>
+ 	</settings>
+
+
+	<!-- 使用别名 -->
+	<!-- 为包下的所有文件设置别名，别名为类名，不分大小写 -->
+	<typeAliases>
+		<package name="com.*.**.entity" />
+	</typeAliases>
+ 	
+</configuration>
+

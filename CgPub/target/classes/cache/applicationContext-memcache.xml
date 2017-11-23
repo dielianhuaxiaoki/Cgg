@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd"
+						default-lazy-init="false" default-autowire="byName">
+						
+    <bean name="memcachedClientBuilder" class="net.rubyeye.xmemcached.XMemcachedClientBuilder">
+        <!-- XMemcachedClientBuilder have two arguments.First is server list,and second is weights array. -->
+        <constructor-arg>
+                <list>
+                <bean class="java.net.InetSocketAddress">
+                <constructor-arg>	
+                <!--<value>183.60.142.151</value>-->
+				<!-- <value>211.99.241.12</value> -->
+                
+                <value>127.0.0.1</value>
+
+                </constructor-arg>
+                <constructor-arg>
+                <value>11211</value>
+                <!-- <value>11211</value> -->
+                </constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <value>1</value>
+            </list>
+        </constructor-arg>
+
+        <!-- nio connection pool size -->
+        <property name="connectionPoolSize" value="20"></property>
+
+        <!-- Use binary protocol,default is TextCommandFactory -->
+        <property name="commandFactory">
+            <bean class="net.rubyeye.xmemcached.command.TextCommandFactory"></bean>
+        </property>
+
+        <!-- Distributed strategy -->
+        <property name="sessionLocator">
+            <bean class="net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator"></bean>
+        </property>
+
+        <!-- Serializing transcoder -->
+        <property name="transcoder">
+            <bean class="net.rubyeye.xmemcached.transcoders.SerializingTranscoder"/>
+        </property>
+    </bean>
+    <!-- Use factory bean to build memcached client -->
+    <bean name="memcachedClient" factory-bean="memcachedClientBuilder" factory-method="build" destroy-method="shutdown">
+        <property name="connectTimeout" value="100000"/>
+        <property name="opTimeout" value="100000"/>
+        <!--关掉心跳检测  -->
+        <property name="enableHeartBeat" value="false"/>
+    </bean>
+</beans>

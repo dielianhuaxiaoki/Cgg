@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.convention.package.locators" value="controller"/>
+	<!-- 开启开发者模式，作用，页面中报错信息会更加详细，默认false -->
+    <constant name="struts.devMode" value="true"/>
+    <!-- 指定由spring负责action对象的创建（必选） -->
+    <constant name="struts.objectFactory" value="spring" />
+    <!-- 国际化设置，请求参数为utf-8编码（必选） -->
+    <constant name="struts.i18n.encoding" value="utf-8" />
+    <constant name="struts.i18n.reload" value="false"/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    <constant name="struts.allowed.action.names" value="[a-zA-Z0-9._!/\-]*"></constant>
+    
+    <!-- 指定上传文件的大小上限
+    <constant name="struts.multipart.maxSize" value="209715200" /> -->
+    <!-- 当配置文件改动后是否重新加载，生产环境下需要设置为false
+    <constant name="struts.configuration.xml.reload" value="false" /> -->
+    <!-- 是否使用struts2的开发模式，生产环境下需要设置为false
+    <constant name="struts.devMode" value="false" /> -->
+    <!-- 浏览器是否缓存静态内容，生产环境下需要设置为true
+    <constant name="struts.serve.static.browserCache" value="true" /> -->
+    
+	<!-- <package name="pubDefault" extends="struts-default">
+        <interceptors>
+            my exception handler  interceptor
+            <interceptor name="PagingInterceptor" class="com.cg.pub.common.interceptor.PagingInterceptor"/>
+            <interceptor-stack name="pubStack">
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="PagingInterceptor"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="pubStack"></default-interceptor-ref>
+        global forward
+        <global-results>
+            <result name="error">/view/global/error.jsp</result>
+        </global-results>
+
+        global exception 
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+    </package> -->
+	
+	<include file="struts-action.xml"></include>
+	 
+</struts>
